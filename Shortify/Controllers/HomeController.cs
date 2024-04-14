@@ -65,12 +65,12 @@ namespace Shortify.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Error(string messageJson = "")
+        public IActionResult Error(string messageJson = "")
         {
             var erorrMessage = JsonSerializer.Deserialize<ErrorViewModel>(messageJson);
             ViewData["errorMessage"] = erorrMessage;
 
-            return View("Index", await _linkService.GetAllLinksAsync());
+            return View("Index");
         }
     }
 }

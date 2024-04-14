@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shortify.Data.Configurations;
 using Shortify.Data.Entities;
+using System.Transactions;
 
 namespace Shortify.Data
 {
@@ -10,7 +11,7 @@ namespace Shortify.Data
 
         public AppDbContext(DbContextOptions<AppDbContext> opt) : base(opt)
         {
-            Database.EnsureCreated();
+            Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

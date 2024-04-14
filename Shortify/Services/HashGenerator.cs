@@ -11,7 +11,7 @@ namespace Shortify.Services
 
             using (SHA1 sha1 = SHA1.Create())
             {
-                return GetHash(sha1, GetRandomString(32));
+                return GetHash(sha1, GetRandomString(length));
             }
         }
 
