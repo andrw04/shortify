@@ -38,6 +38,8 @@ namespace Shortify.Data.Repository
                 query = query.Where(filter);
             }
 
+            query = query.OrderByDescending(l => l.Created);
+
             return await query.ToListAsync(cancellationToken);
         }
 

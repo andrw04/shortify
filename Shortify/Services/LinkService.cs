@@ -21,7 +21,7 @@ namespace Shortify.Services
 
         public async Task CreateLinkAsync(LinkDto link, CancellationToken cancellationToken = default)
         {
-            var hash = StringHasher.HashString(link.LongURL);
+            var hash = HashGenerator.Hash();
 
             var links = await _unitOfWork.LinkRepository.GetAsync(cancellationToken,
                 l => l.Id == hash);
