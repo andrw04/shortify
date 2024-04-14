@@ -1,8 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+﻿<div>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Длинный URL</th>
+                <th>Сокращенный URL</th>
+                <th>Дата создания</th>
+                <th>Количество переходов</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (LinkDto link in Model)
+            {
+                <tr>
+                    <td><a href="@link.LongURL">@link.LongURL</a></td>
+                    <td><a href="@link.ShortURL">@link.ShortURL</a></td>
+                    <td>@link.Created</td>
+                    <td>@link.ClickCount</td>
+                    <td><a asp-controller="Home" asp-action="Edit" asp-route-id="@link.Id">Изменить</a></td>
+                    <td><a asp-controller="Home" asp-action="Delete" asp-route-id="@link.Id">Удалить</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-controller="Home" asp-action="Create">Добавить URL</a>
 </div>

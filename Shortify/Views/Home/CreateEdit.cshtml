@@ -1,0 +1,15 @@
+﻿@model LinkDto
+
+@{
+    var isCreate = Model is null;
+}
+
+<div>
+    <form asp-controller="Home" asp-action="@(isCreate ? "Create" : "Edit")">
+        <div>
+            <label asp-for="LongURL">Длинный URL</label>
+            <input asp-for="LongURL" value="@(Model?.LongURL)" />
+        </div>
+        <button type="submit">@(isCreate ? "Создать" : "Изменить")</button>
+    </form>
+</div>
