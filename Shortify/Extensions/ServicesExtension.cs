@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Shortify.Data;
 using Shortify.Data.Abstractions;
 using Shortify.Data.Mapping;
+using Shortify.Data.Mapping.DTOs;
 using Shortify.Data.Repository;
+using Shortify.Data.Validators;
 using Shortify.Services;
 
 namespace Shortify.Extensions
@@ -25,6 +28,8 @@ namespace Shortify.Extensions
                 cfg.AddProfile(new LinkMappingProfile(provider.GetService<IHttpContextAccessor>()!));
             }).CreateMapper());
 
+            services.AddScoped<IValidator<LinkDto>, LinkValidator>();
+
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
             services.AddScoped<ILinkService, LinkService>(provider =>
             {
@@ -32,12 +37,9 @@ namespace Shortify.Extensions
 
                 var mapper = provider.GetService<IMapper>()!;
 
-                var httpContext = provider.GetRequiredService<IHttpContextAccessor>()
-                                          .HttpContext!;
+                var validator = provider.GetService<IValidator<LinkDto>>()!;
 
-                var address = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
-
-                return new LinkService(unitOfWork, mapper, address);
+                return new LinkService(unitOfWork, mapper, validator);
             });
 
             return services;

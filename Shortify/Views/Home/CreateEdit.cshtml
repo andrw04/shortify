@@ -4,10 +4,13 @@
     var isCreate = Model is null;
 }
 
-<form asp-controller="Home" asp-action="@(isCreate ? "Create" : "Edit")">
+<form class="mb-3 needs-validation" novalidate asp-controller="Home" asp-action="@(isCreate ? "Create" : "Edit")">
     <div class="mb-3">
         <label class="form-label" asp-for="LongURL">Длинный URL</label>
-        <input class="form-control" placeholder="Длинный URL" asp-for="LongURL" value="@(Model?.LongURL)"/>
+        <input class="form-control" placeholder="Длинный URL" asp-for="LongURL" value="@(Model?.LongURL)" required/>
+        <div class="invalid-feedback">
+            Поле не должно быть пустым.
+        </div>
     </div>
     <div class="mb-3">
         <button class="btn btn-primary" type="submit">

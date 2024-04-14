@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-using Shortify.Data.Mapping;
 using Shortify.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +7,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddServices(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseExceptionMiddleware();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

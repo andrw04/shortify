@@ -3,6 +3,7 @@ using Shortify.Data.Mapping.DTOs;
 using Shortify.Models;
 using Shortify.Services;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace Shortify.Controllers
 {
@@ -64,10 +65,12 @@ namespace Shortify.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public async Task<IActionResult> Error(string messageJson = "")
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var erorrMessage = JsonSerializer.Deserialize<ErrorViewModel>(messageJson);
+            ViewData["errorMessage"] = erorrMessage;
+
+            return View("Index", await _linkService.GetAllLinksAsync());
         }
     }
 }

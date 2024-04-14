@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Shortify.Data.Abstractions;
 using Shortify.Data.Entities;
 using Shortify.Data.Mapping.DTOs;
-using System.Threading;
 
 namespace Shortify.Services
 {
@@ -10,17 +10,19 @@ namespace Shortify.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly string _baseAddress;
+        private readonly IValidator<LinkDto> _validator;
 
-        public LinkService(IUnitOfWork unitOfWork, IMapper mapper, string baseAddress)
+        public LinkService(IUnitOfWork unitOfWork, IMapper mapper, IValidator<LinkDto> validator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _baseAddress = baseAddress;
+            _validator = validator;
         }
 
         public async Task CreateLinkAsync(LinkDto link, CancellationToken cancellationToken = default)
         {
+            await _validator.ValidateAndThrowAsync(link, cancellationToken);
+
             var hash = HashGenerator.Hash();
 
             var links = await _unitOfWork.LinkRepository.GetAsync(cancellationToken,
@@ -64,11 +66,13 @@ namespace Shortify.Services
             return _mapper.Map<LinkDto>(existsLink);
         }
 
-        public async Task UpdateLinkAsync(string id, LinkDto linkDto, CancellationToken cancellationToken = default)
+        public async Task UpdateLinkAsync(string id, LinkDto link, CancellationToken cancellationToken = default)
         {
+            await _validator.ValidateAndThrowAsync(link, cancellationToken);
+
             var existsLink = await GetLinkByIdAsync(id, cancellationToken);
 
-            existsLink.LongURL = linkDto.LongURL;
+            existsLink.LongURL = link.LongURL;
 
             await _unitOfWork.LinkRepository.UpdateAsync(existsLink,
                 cancellationToken);
