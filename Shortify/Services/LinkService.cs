@@ -23,10 +23,10 @@ namespace Shortify.Services
         {
             await _validator.ValidateAndThrowAsync(link, cancellationToken);
 
-            var hash = HashGenerator.Hash();
+            var identifier = Randomizer.GetRandomString();
 
             var links = await _unitOfWork.LinkRepository.GetAsync(cancellationToken,
-                l => l.Id == hash);
+                l => l.Id == identifier);
             var existsLink = links.FirstOrDefault();
 
             if (existsLink is not null)
@@ -34,7 +34,7 @@ namespace Shortify.Services
                 throw new ArgumentException("This URL already exists.");
             }
 
-            link.Id = hash;
+            link.Id = identifier;
 
             await _unitOfWork.LinkRepository.AddAsync(_mapper.Map<Link>(link));
             await _unitOfWork.SaveAllAsync();
